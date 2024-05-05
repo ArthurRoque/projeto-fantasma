@@ -19,13 +19,19 @@ prefixo_decada <- function(decadas) {
   return(paste0(prefixo, decadas))
 }
 
-
+get_decade <- function(date_string) {
+  year <- as.numeric(substr(date_string, 1, 4))
+  decade <- floor(year / 10) * 10
+  return(decade)
+}
 
 # Número de lançamentos a cada década por formato de lançamento
-warner_bros['decade'] = substr(warner_bros$date_aired, 3, 4)
-warner_bros <- mutate(warner_bros, decade = as.integer(decade))
+warner_bros['decade'] <- get_decade(warner_bros$date_aired)
 
-warner_bros['decade'] <- as.integer(prefixo_decada(warner_bros$decade))
+df_subset <- warner_bros[, c("date_aired", "decade")]
+
+# Agora visualize o novo dataframe usando View
+View(df_subset)
 
 lancamentos_por_decada_por_tipo <- warner_bros %>%
   group_by(decade, format)%>%
